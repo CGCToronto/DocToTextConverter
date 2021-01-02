@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Spire.Doc;
+using Spire.Pdf;
 
 namespace DocToTextConverter
 {
-    class Program
+    class DocToTextConverter
     {
         static void Main(string[] args)
         {
@@ -26,16 +27,7 @@ namespace DocToTextConverter
 
                 foreach (string file in files)
                 {
-                    if (Path.GetExtension(file) == ".doc")
-                    {
-                        Document document = new Document();
-
-                        document.LoadFromFile(file);
-                        string name = Path.GetFileNameWithoutExtension(file);
-                        string destinationName = $"{intermediatePath}\\{name}.html";
-                        document.SaveToFile(destinationName, FileFormat.Html);
-                        Console.WriteLine($"Converted {file} to {destinationName}");
-                    }
+                    SavePDFFileToHTML(intermediatePath, file);
                 }
 
                 string[] imageFolders = Directory.GetDirectories(intermediatePath);
@@ -48,7 +40,7 @@ namespace DocToTextConverter
                     Directory.CreateDirectory(newLocation);
                     foreach (var image in directoryInfo.GetFiles())
                     {
-                        image.CopyTo(Path.Combine(newLocation, image.Name));
+                        image.CopyTo(Path.Combine(newLocation, image.Name), true);
                         Console.WriteLine($"Copied image {image} to {newLocation}");
                     }
                 }
@@ -74,6 +66,34 @@ namespace DocToTextConverter
 
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
+        }
+
+        private static void SaveDocFileToHTML(string outputPath, string file)
+        {
+            if (Path.GetExtension(file) == ".doc" || Path.GetExtension(file) == ".docx")
+            {
+                Document document = new Document();
+
+                document.LoadFromFile(file);
+                string name = Path.GetFileNameWithoutExtension(file);
+                string destinationName = $"{outputPath}\\{name}.html";
+                document.SaveToFile(destinationName, Spire.Doc.FileFormat.Html);
+                Console.WriteLine($"Converted {file} to {destinationName}");
+            }
+        }
+
+        private static void SavePDFFileToHTML(string outputPath, string file)
+        {
+            if (Path.GetExtension(file) == ".pdf")
+            {
+                PdfDocument pdf = new PdfDocument();
+
+                pdf.LoadFromFile(file);
+                string name = Path.GetFileNameWithoutExtension(file);
+                string destinationName = $"{outputPath}\\{name}.html";
+                pdf.SaveToFile(destinationName, Spire.Pdf.FileFormat.HTML);
+                Console.WriteLine($"Converted {file} to {destinationName}");
+            }
         }
 
         private static void ConvertHTMLToTXTKeepImages(string contentFile, string outputFile)
