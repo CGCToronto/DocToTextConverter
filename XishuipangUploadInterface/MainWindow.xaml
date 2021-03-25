@@ -1,0 +1,29 @@
+﻿<Window x:Class="XishuipangUploadInterface.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:XishuipangUploadInterface"
+        mc:Ignorable="d"
+        Title="Xishuipang New Volume Upload Utility" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Margin="5" Grid.Row="0" Text="Step 1: Enter folder directory that contains all .docx files." />
+        <DockPanel Margin="5" Grid.Row="1" >
+            <Button Content="..." Width="30" DockPanel.Dock="Right" Click="DocInputFolderButton_Click"/>
+            <TextBox Text="{Binding DocInputFolderString}" Margin="0,0,5,0" />
+        </DockPanel>
+        <TextBlock Margin="5" Grid.Row="2" Text="Step 2: Enter destination directory to contain all the .txt files." />
+        <DockPanel Margin="5" Grid.Row="3" >
+            <Button Content="..." Width="30" DockPanel.Dock="Right"/>
+            <TextBox Margin="0,0,5,0" />
+        </DockPanel>
+        <Button Grid.Row="4" Height="50" Margin="20" Content="Convert .doc to .txt" />
+    </Grid>
+</Window>

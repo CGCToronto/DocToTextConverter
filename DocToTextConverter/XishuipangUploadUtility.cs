@@ -9,12 +9,36 @@ using System.Threading.Tasks;
 using Spire.Doc;
 using Spire.Pdf;
 
-namespace DocToTextConverter
+namespace XishuipangUploadUtility
 {
-    class DocToTextConverter
+    class XishuipangUploadUtility
     {
         static void Main(string[] args)
         {
+
+            Console.WriteLine("What would you like to do?\n" +
+                "1 - Convert .doc or .docx files to text files.\n" +
+                "2 - Convert text files to JSON files. \n" +
+                "3 - Upload JSON files to MongoDB database.");
+
+            string input = Console.ReadLine();
+
+            switch (input)
+            {
+                case "1":
+                    ConvertDocToText();
+                    break;
+                case "2":
+                    ConvertTextToJSON();
+                    break;
+                case "3":
+                    UploadJSON();
+                    break;
+                default:
+                    Console.WriteLine("Input Invalid, please try running the program again.");
+                    break;
+            }
+
             Console.WriteLine("Folder to convert: ");
             string folderPath = Console.ReadLine();
             if (Directory.Exists(folderPath))
@@ -27,7 +51,7 @@ namespace DocToTextConverter
 
                 foreach (string file in files)
                 {
-                    SavePDFFileToHTML(intermediatePath, file);
+                    SaveDocFileToHTML(intermediatePath, file);
                 }
 
                 string[] imageFolders = Directory.GetDirectories(intermediatePath);

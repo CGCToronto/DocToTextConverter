@@ -20,7 +20,7 @@ namespace ParseTextToJson
                 }
                 if (Path.GetExtension(file) == ".txt")
                 {
-
+                    
                 }
             }
 
