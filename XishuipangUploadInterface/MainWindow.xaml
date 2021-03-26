@@ -21,9 +21,9 @@
         </DockPanel>
         <TextBlock Margin="5" Grid.Row="2" Text="Step 2: Enter destination directory to contain all the .txt files." />
         <DockPanel Margin="5" Grid.Row="3" >
-            <Button Content="..." Width="30" DockPanel.Dock="Right"/>
-            <TextBox Margin="0,0,5,0" />
+            <Button Content="..." Width="30" DockPanel.Dock="Right" Click="TextOutputFolderButton_Click"/>
+            <TextBox Text="{Binding TextOutputFolderString}" Margin="0,0,5,0" />
         </DockPanel>
-        <Button Grid.Row="4" Height="50" Margin="20" Content="Convert .doc to .txt" />
+        <Button Grid.Row="4" Height="50" Margin="20" Content="Convert .doc to .txt" Click="ConvertButton_Click"/>
     </Grid>
 </Window>

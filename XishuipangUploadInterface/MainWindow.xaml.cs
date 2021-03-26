@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace XishuipangUploadInterface
 {
@@ -41,6 +42,25 @@ namespace XishuipangUploadInterface
             }
         }
 
+        // field TextOutputFolderString
+        private string textOutputFolderString;
+        public string TextOutputFolderString
+        {
+            get
+            {
+                return textOutputFolderString;
+            }
+
+            set
+            {
+                if (value != textOutputFolderString)
+                {
+                    textOutputFolderString = value;
+                    OnPropertyChange("TextOutputFolderString");
+                }
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -56,11 +76,53 @@ namespace XishuipangUploadInterface
 
         private void DocInputFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            // Open the common open file dialog
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
             
-            if (openFileDialog.ShowDialog() == true)
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                DocInputFolderString = System.IO.Path.GetDirectoryName(openFileDialog.FileName);
+                DocInputFolderString = dialog.FileName;
+            }
+        }
+
+        // Text file output folder button clicked
+        private void TextOutputFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Define open file dialog
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+
+            // if open file dialog is opened successfully
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                // Set TextOutputFolderString to the path from the open file dialog
+                TextOutputFolderString = dialog.FileName;
+            }
+        }
+
+        private void ConvertButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Check if both DocInputFolderString and TextOutputFolderString are set
+            if (!String.IsNullOrEmpty(DocInputFolderString) && !String.IsNullOrEmpty(TextOutputFolderString))
+            {
+                // If so, Call function to convert .docx files to .txt files using the two pathes defined.
+                bool result = DocToTextConverter.ConvertDocsToTextFiles(DocInputFolderString, TextOutputFolderString);
+
+                if (result)
+                {
+                    MessageBox.Show(".doc files are converted successfully.");
+                }
+                else
+                {
+                    // TODO: Write better error messages.
+                    MessageBox.Show("Error: Can't converting .doc files.");
+                }
+            }
+            else
+            {
+                // If not, show an error and return
+                MessageBox.Show("Make sure that input and output pathes are correct.");
             }
         }
     }

@@ -12,18 +12,13 @@ namespace XishuipangUploadInterface
 {
     class DocToTextConverter
     {
-
-        public void ConvertDocsToTextFiles()
+        public static bool ConvertDocsToTextFiles(string inputPath, string outputPath)
         {
-            Console.WriteLine("Folder to convert: ");
-            string folderPath = Console.ReadLine();
-            if (Directory.Exists(folderPath))
+            if (Directory.Exists(inputPath) && Directory.Exists(outputPath))
             {
-                var intermediateFolderInfo = Directory.CreateDirectory($"{folderPath}\\intermediate");
+                var intermediateFolderInfo = Directory.CreateDirectory($"{inputPath}\\intermediate");
                 var intermediatePath = intermediateFolderInfo.FullName;
-                var outputFolderInfo = Directory.CreateDirectory($"{folderPath}\\output");
-                var outputPath = outputFolderInfo.FullName;
-                string[] files = Directory.GetFiles(folderPath);
+                string[] files = Directory.GetFiles(inputPath);
 
                 foreach (string file in files)
                 {
@@ -58,14 +53,13 @@ namespace XishuipangUploadInterface
                 }
 
                 Console.WriteLine("Conversion succeeded.");
+                return true;
             }
             else
             {
                 Console.WriteLine("The directory you provided doesn't exist.");
+                return false;
             }
-
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
         }
 
         private static void SaveDocFileToHTML(string outputPath, string file)
