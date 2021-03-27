@@ -12,4 +12,8 @@
     <PackageReference Include="Spire.Doc" Version="9.3.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ParseTextToJson\ParseTextToJson.csproj" />
+  </ItemGroup>
+
 </Project>

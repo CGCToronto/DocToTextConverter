@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using ParseTextToJson;
 
 namespace XishuipangUploadInterface
 {
@@ -61,6 +62,45 @@ namespace XishuipangUploadInterface
             }
         }
 
+        // Field: JsonFolderString
+        private string jsonFolderString;
+        public string JsonFolderString
+        {
+            get
+            {
+                return jsonFolderString;
+            }
+
+            set
+            {
+                if (value != jsonFolderString)
+                {
+                    jsonFolderString = value;
+                    OnPropertyChange("JsonFolderString");
+                }
+            }
+        }
+
+
+        // Field: VolumeNumber
+        private int volumeNumber;
+        public int VolumeNumber
+        {
+            get
+            {
+                return volumeNumber;
+            }
+
+            set
+            {
+                if (value != volumeNumber)
+                {
+                    volumeNumber = value;
+                    OnPropertyChange("VolumeNumber");
+                }
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -101,6 +141,21 @@ namespace XishuipangUploadInterface
             }
         }
 
+        // JSON folder button clicked
+        private void JSONFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Define open file dialog
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+
+            // if open file dialog is opened successfully
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                // Set TextOutputFolderString to the path from the open file dialog
+                JsonFolderString = dialog.FileName;
+            }
+        }
+
         private void ConvertButton_Click(object sender, RoutedEventArgs e)
         {
             // Check if both DocInputFolderString and TextOutputFolderString are set
@@ -124,6 +179,41 @@ namespace XishuipangUploadInterface
                 // If not, show an error and return
                 MessageBox.Show("Make sure that input and output pathes are correct.");
             }
+        }
+
+        private void ConvertJSONButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (VolumeNumber == 0)
+            {
+                MessageBox.Show("Please provide a valid volume number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Check if text folder path and json folder path are set
+            if (Directory.Exists(TextOutputFolderString) && Directory.Exists(JsonFolderString))
+            {
+                // Convert all .txt files to .json files
+                TextToJsonParser jsonParser = new TextToJsonParser(TextOutputFolderString, JsonFolderString, VolumeNumber);
+                if (jsonParser.Parse())
+                {
+                    MessageBox.Show("JSON files generated successfully!", "Success", MessageBoxButton.OK);
+                }
+                
+            }
+            else
+            {
+                // show some error messages.
+                MessageBox.Show("Either pathes are invalid, please verify these pathes.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void QuickSetButton_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: Use volume number to quickly set input and output folder pathes so they don't have to be hand-picked.
+
+            // Hard code these values for now:
+            TextOutputFolderString = @"C:\Users\luoxi\Workspace\Repos\ByTheStreamWebsite\public\text\volume_67";
+            JsonFolderString = @"C:\Users\luoxi\Workspace\Repos\ByTheStreamWebsite\public\text\volume_67\json";
         }
     }
 }

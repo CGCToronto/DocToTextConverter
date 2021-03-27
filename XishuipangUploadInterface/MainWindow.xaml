@@ -5,25 +5,59 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:XishuipangUploadInterface"
         mc:Ignorable="d"
-        Title="Xishuipang New Volume Upload Utility" Height="450" Width="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
-        <TextBlock Margin="5" Grid.Row="0" Text="Step 1: Enter folder directory that contains all .docx files." />
-        <DockPanel Margin="5" Grid.Row="1" >
-            <Button Content="..." Width="30" DockPanel.Dock="Right" Click="DocInputFolderButton_Click"/>
-            <TextBox Text="{Binding DocInputFolderString}" Margin="0,0,5,0" />
-        </DockPanel>
-        <TextBlock Margin="5" Grid.Row="2" Text="Step 2: Enter destination directory to contain all the .txt files." />
-        <DockPanel Margin="5" Grid.Row="3" >
-            <Button Content="..." Width="30" DockPanel.Dock="Right" Click="TextOutputFolderButton_Click"/>
-            <TextBox Text="{Binding TextOutputFolderString}" Margin="0,0,5,0" />
-        </DockPanel>
-        <Button Grid.Row="4" Height="50" Margin="20" Content="Convert .doc to .txt" Click="ConvertButton_Click"/>
-    </Grid>
+        Title="Xishuipang New Volume Upload Utility" Height="600" Width="600">
+    <StackPanel>
+
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Margin="5" Text="Volume Number:" Grid.Column="0" />
+            <TextBox Margin="5" Text="{Binding VolumeNumber}" Grid.Column="1" Width="50"/>
+            <TextBlock Margin="5" Text="Quickly set the following folder pathes:" HorizontalAlignment="Right" Grid.Column="2" />
+            <Button Grid.Column="3" Width="100" Margin="5" Content="Quick Set" Click="QuickSetButton_Click"/>
+        </Grid>
+        
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <TextBlock Margin="5" Grid.Row="0" Text="Step 1: Convert all .doc or .docx files to text files." />
+            <TextBlock Margin="5" Grid.Row="1" Text="Enter folder directory that contains all .docx files:" />
+            <DockPanel Margin="5" Grid.Row="2" >
+                <Button Content="..." Width="20" DockPanel.Dock="Right" Click="DocInputFolderButton_Click"/>
+                <TextBox Text="{Binding DocInputFolderString}" Margin="0,0,5,0" />
+            </DockPanel>
+            <TextBlock Margin="5" Grid.Row="3" Text="Enter destination directory to contain all the .txt files:" />
+            <DockPanel Margin="5" Grid.Row="4" >
+                <Button Content="..." Width="20" DockPanel.Dock="Right" Click="TextOutputFolderButton_Click"/>
+                <TextBox Text="{Binding TextOutputFolderString}" Margin="0,0,5,0" />
+            </DockPanel>
+            <Button Grid.Row="5" Margin="5" Content="Convert .doc to .txt" Click="ConvertButton_Click"/>
+        </Grid>
+
+        <StackPanel Orientation="Vertical" Margin="10">
+            <TextBlock Margin="5" Text="Step 2. Convert text files to JSON files."/>
+            <TextBlock Margin="5" Text="Enter folder directory that contains all the edited text files:" />
+            <DockPanel Margin="5">
+                <Button Content="..." Width="20" DockPanel.Dock="Right" Click="TextOutputFolderButton_Click"/>
+                <TextBox Text="{Binding TextOutputFolderString}" Margin="0,0,5,0" />
+            </DockPanel>
+            <TextBlock Margin="5" Text="Enter destination directory to contain all the JSON files:" />
+            <DockPanel Margin="5">
+                <Button Content="..." Width="20" DockPanel.Dock="Right" Click="JSONFolderButton_Click"/>
+                <TextBox Text="{Binding JsonFolderString}" Margin="0,0,5,0" />
+            </DockPanel>
+            <Button Grid.Row="5" Margin="5" Content="Convert .txt to .json" Click="ConvertJSONButton_Click"/>
+        </StackPanel>
+    </StackPanel>
+    
 </Window>
