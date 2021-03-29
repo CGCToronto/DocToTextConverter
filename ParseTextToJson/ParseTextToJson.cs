@@ -14,6 +14,10 @@ namespace ParseTextToJson
         public string OutputFolder { get; set; }
         public int VolumeNumber { get; set; }
 
+
+        private TableOfContent simplifiedTOC = new TableOfContent();
+        private TableOfContent traditionalTOC = new TableOfContent();
+
         public TextToJsonParser(string inputFolder, string outputFolder, int volumeNumber)
         {
             InputFolder = inputFolder;
@@ -33,32 +37,114 @@ namespace ParseTextToJson
                 {
                     // Read metadata file into a dictionary of key value pairs
                     ReadMetadata(file);
-
                 }
                 else if (Path.GetExtension(file) == ".txt")
                 {
-
                     // Check for the version of the file, it is the suffix of the file, either a 's', 't' or 'e'.
-                    string version = Path.GetFileNameWithoutExtension(file).Split('_').LastOrDefault();
+                    string[] tokens = Path.GetFileNameWithoutExtension(file).Split('_');
+                    string version = tokens.LastOrDefault();
+                    int index;
+                    int.TryParse(tokens.First(), out index);
 
                     // Generate the JSON file for this file
                     GenerateJSONFile(file, version);
 
-                    // Add file to dictionaries bases on its version.
-                    // if it's english version, add to both dictionary
+                    ArticleInfo articleInfo = GetArticleInfo(file);
 
+                    // Add file to dictionaries bases on its version.
+                    if (version == "s" || version == "e")
+                    {
+                        simplifiedTOC.AddNewArticleInfo(articleInfo, index);
+                    }
+
+                    if (version == "t" || version == "e")
+                    {
+                        traditionalTOC.AddNewArticleInfo(articleInfo, index);
+                    }
                 }
             }
 
             // Generate table of content for both dictionaries.
+            simplifiedTOC.GenerateJSON(OutputFolder + "\\table_of_content_s.json");
+            traditionalTOC.GenerateJSON(OutputFolder + "\\table_of_content_t.json");
 
             return true;
         }
 
-        // Read metadata file into a dictionary of key value pairs
-        private Dictionary<string, string> ReadMetadata(string filename)
+        private ArticleInfo GetArticleInfo(string file)
         {
-            return null;
+            ArticleInfo articleInfo = new ArticleInfo();
+            // Using stream reader to read article info from file to an ArticleInfo object
+            using (StreamReader sr = new StreamReader(file))
+            {
+                articleInfo.Category = GetNextNonEmptyLine(sr);
+                articleInfo.Title = GetNextNonEmptyLine(sr);
+                articleInfo.Author = GetNextNonEmptyLine(sr);
+                articleInfo.ID = Path.GetFileNameWithoutExtension(file);
+            }
+
+            return articleInfo;
+        }
+
+        // Read metadata file into a dictionary of key value pairs
+        private void ReadMetadata(string filePath)
+        {
+            Dictionary<string, string> metaDataDictionary = new Dictionary<string, string>();
+
+            using (StreamReader sr = new StreamReader(filePath))
+            {
+                string line = GetNextNonEmptyLine(sr);
+                while (line != null)
+                {
+                    string[] tokens = line.Split(':');
+                    if (metaDataDictionary != null && tokens.Length == 2)
+                    {
+                        metaDataDictionary[tokens[0]] = tokens[1];
+                    }
+                    line = GetNextNonEmptyLine(sr);
+                }
+            }
+
+            int year = 0;
+            if (metaDataDictionary.ContainsKey("year"))
+            {
+                int.TryParse(metaDataDictionary["year"], out year);
+            }
+
+            int month = 0;
+            if (metaDataDictionary.ContainsKey("month"))
+            {
+                int.TryParse(metaDataDictionary["month"], out month);
+            }
+
+            string simplifiedTheme = "";
+            if (metaDataDictionary.ContainsKey("theme_simplified"))
+            {
+                simplifiedTheme = metaDataDictionary["theme_simplified"];
+            }
+
+            string traditionalTheme = "";
+            if (metaDataDictionary.ContainsKey("theme_traditional"))
+            {
+                traditionalTheme = metaDataDictionary["theme_traditional"];
+            }
+
+            string englishTheme = "";
+            if (metaDataDictionary.ContainsKey("theme_english"))
+            {
+                englishTheme = metaDataDictionary["theme_english"];
+            }
+
+            if (simplifiedTOC != null)
+            {
+                simplifiedTOC.SetInfo(VolumeNumber, "simplified", simplifiedTheme + " " + englishTheme, year, month);
+            }
+
+            if (traditionalTOC != null)
+            {
+                traditionalTOC.SetInfo(VolumeNumber, "traditional", traditionalTheme + " " + englishTheme, year, month);
+            }
+
         }
 
         // Generate JSON file
@@ -66,7 +152,7 @@ namespace ParseTextToJson
         {
             // Get filename without extension
             string fileName = Path.GetFileNameWithoutExtension(filePath);
-            string outputFileName = OutputFolder + "/" + fileName + ".json";
+            string outputFileName = OutputFolder + "\\" + fileName + ".json";
 
             // Set versionText from 's', 't', 'e' to simplified, traditional, english
             string versionText = "simplified";
@@ -153,13 +239,6 @@ namespace ParseTextToJson
 
             return line;
         }
-
-        // Generate table of contents
-        private void GenerateTableOfContent()
-        {
-
-        }
-
 
     }
 }
