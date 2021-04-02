@@ -27,8 +27,6 @@ namespace ParseTextToJson
 
         public bool Parse()
         {
-            // TODO: Create two dictionaries, one contains all version s files,
-            // TODO: the other contains all version t files.
 
             string[] allFiles = Directory.GetFiles(InputFolder);
             foreach (string file in allFiles)
@@ -99,6 +97,8 @@ namespace ParseTextToJson
                     string[] tokens = line.Split(':');
                     if (metaDataDictionary != null && tokens.Length == 2)
                     {
+                        tokens[0] = tokens[0].Trim();
+                        tokens[1] = tokens[1].Trim();
                         metaDataDictionary[tokens[0]] = tokens[1];
                     }
                     line = GetNextNonEmptyLine(sr);

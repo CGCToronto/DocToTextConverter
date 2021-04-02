@@ -4,11 +4,15 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <AssemblyName>Xishuipang Upload Utility</AssemblyName>
+    <ApplicationIcon>iconfinder-upload-4341320_120532.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
+    <PackageReference Include="MongoDB.Bson" Version="2.12.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.12.1" />
     <PackageReference Include="Spire.Doc" Version="9.3.6" />
   </ItemGroup>
 

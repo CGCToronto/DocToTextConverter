@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ParseTextToJson;
+using System.Diagnostics;
 
 namespace XishuipangUploadInterface
 {
@@ -101,10 +102,14 @@ namespace XishuipangUploadInterface
             }
         }
 
+        public Logger InfoLogger { get; set; } = Logger.Instance;
+
         public MainWindow()
         {
             InitializeComponent();
             this.DataContext = this;
+
+            InfoLogger.WriteLine("Xishuipang Upload Utility v1.0, 2021-4-2");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -210,10 +215,55 @@ namespace XishuipangUploadInterface
         private void QuickSetButton_Click(object sender, RoutedEventArgs e)
         {
             // TODO: Use volume number to quickly set input and output folder pathes so they don't have to be hand-picked.
+            // Assuming that this application is located within Xishuipang web project.
+            TextOutputFolderString = @"..\text\volume_" + VolumeNumber;
+            JsonFolderString = @"..\content\volume_" + VolumeNumber;
+        }
 
-            // Hard code these values for now:
-            TextOutputFolderString = @"C:\Users\luoxi\Workspace\Repos\ByTheStreamWebsite\public\text\volume_67";
-            JsonFolderString = @"C:\Users\luoxi\Workspace\Repos\ByTheStreamWebsite\public\text\volume_67\json";
+        private void UploadToMongoDBButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Directory.Exists(JsonFolderString))
+            {
+                MongoDBUploader uploader = new MongoDBUploader();
+                uploader.Upload(JsonFolderString);
+            }
+            else
+            {
+                // show some error messages.
+                InfoLogger.WriteLine("JSON file folder path is invalid.");
+                MessageBox.Show("JSON file folder path is invalid.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void LogUpdated(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+
+            textBox.ScrollToEnd();
+        }
+
+        private void OpenTextFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Directory.Exists(TextOutputFolderString))
+            {
+                Process.Start("explorer.exe", TextOutputFolderString);
+            }
+            else
+            {
+                InfoLogger.WriteLine("Error: Text file folder path not valid.");
+            }
+        }
+
+        private void OpenJSONFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Directory.Exists(JsonFolderString))
+            {
+                Process.Start("explorer.exe", JsonFolderString);
+            }
+            else
+            {
+                InfoLogger.WriteLine("Error: JSON file folder path not valid.");
+            }
         }
     }
 }
