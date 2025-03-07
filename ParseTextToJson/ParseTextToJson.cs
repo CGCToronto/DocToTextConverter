@@ -209,7 +209,7 @@ namespace ParseTextToJson
                     string line = GetNextNonEmptyLine(sr);
                     while (line != null)
                     {
-                        line.Replace("\"", "\\\"");
+                        line = line.Replace("\"", "\\\"");
                         string contentLine = "        \"" + line + "\"";
                         line = GetNextNonEmptyLine(sr);
                         if (line != null)

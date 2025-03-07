@@ -6,6 +6,9 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>Xishuipang Upload Utility</AssemblyName>
     <ApplicationIcon>iconfinder-upload-4341320_120532.ico</ApplicationIcon>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0</AssemblyVersion>
+    <FileVersion>1.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

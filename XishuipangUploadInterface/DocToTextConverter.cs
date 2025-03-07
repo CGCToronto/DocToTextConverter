@@ -14,8 +14,15 @@ namespace XishuipangUploadInterface
     {
         public static bool ConvertDocsToTextFiles(string inputPath, string outputPath)
         {
-            if (Directory.Exists(inputPath) && Directory.Exists(outputPath))
+            if (Directory.Exists(inputPath))
             {
+                if (!Directory.Exists(outputPath))
+                {
+                    Directory.CreateDirectory(outputPath);
+                    Logger.Instance.WriteLine($"Output path doesn't exist: {outputPath}");
+                    Logger.Instance.WriteLine($"Output path created: {outputPath}");
+                }
+
                 var intermediateFolderInfo = Directory.CreateDirectory($"{inputPath}\\intermediate");
                 var intermediatePath = intermediateFolderInfo.FullName;
                 string[] files = Directory.GetFiles(inputPath);
@@ -37,6 +44,7 @@ namespace XishuipangUploadInterface
                     {
                         image.CopyTo(Path.Combine(newLocation, image.Name), true);
                         Console.WriteLine($"Copied image {image} to {newLocation}");
+                        Logger.Instance.WriteLine($"Copied image {image} to {newLocation}");
                     }
                 }
 
@@ -49,15 +57,18 @@ namespace XishuipangUploadInterface
                         var outputFile = $"{outputPath}\\{Path.GetFileNameWithoutExtension(contentFile)}.txt";
                         ConvertHTMLToTXTKeepImages(contentFile, outputFile);
                         Console.WriteLine($"Converted {contentFile} from html to {outputFile} with image tags.");
+                        Logger.Instance.WriteLine($"Converted {contentFile} from html to {outputFile} with image tags.");
                     }
                 }
 
                 Console.WriteLine("Conversion succeeded.");
+                Logger.Instance.WriteLine("Conversion succeeded.");
                 return true;
             }
             else
             {
-                Console.WriteLine("The directory you provided doesn't exist.");
+                Console.WriteLine("The directory you provided don't exist.");
+                Logger.Instance.WriteLine("The directory you provided don't exist.");
                 return false;
             }
         }
@@ -73,6 +84,7 @@ namespace XishuipangUploadInterface
                 string destinationName = $"{outputPath}\\{name}.html";
                 document.SaveToFile(destinationName, Spire.Doc.FileFormat.Html);
                 Console.WriteLine($"Converted {file} to {destinationName}");
+                Logger.Instance.WriteLine($"Converted {file} to {destinationName}");
             }
         }
 
@@ -87,6 +99,7 @@ namespace XishuipangUploadInterface
                 string destinationName = $"{outputPath}\\{name}.html";
                 pdf.SaveToFile(destinationName, Spire.Pdf.FileFormat.HTML);
                 Console.WriteLine($"Converted {file} to {destinationName}");
+                Logger.Instance.WriteLine($"Converted {file} to {destinationName}");
             }
         }
 
@@ -108,6 +121,7 @@ namespace XishuipangUploadInterface
             catch (Exception e)
             {
                 Console.WriteLine($"Cannot read file {contentFile} due to {e.Message}.");
+                Logger.Instance.WriteLine($"Cannot read file {contentFile} due to {e.Message}.");
             }
 
             foreach (var line in content)
@@ -131,6 +145,7 @@ namespace XishuipangUploadInterface
             catch (Exception e)
             {
                 Console.WriteLine($"Cannot write file {contentFile} due to {e.Message}.");
+                Logger.Instance.WriteLine($"Cannot write file {contentFile} due to {e.Message}.");
             }
         }
 

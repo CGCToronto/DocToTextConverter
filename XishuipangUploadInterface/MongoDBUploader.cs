@@ -41,6 +41,12 @@ namespace XishuipangUploadInterface
             foreach (string filePath in files)
             {
                 string fileName = Path.GetFileName(filePath);
+                string fileExtension = Path.GetExtension(filePath).ToLower();
+
+                if (fileExtension != ".json")
+                {
+                    continue;
+                }
 
                 // if the file is a table of content file
                 if (fileName == "table_of_content_s.json" || fileName == "table_of_content_t.json")
@@ -62,6 +68,11 @@ namespace XishuipangUploadInterface
         {
             // Check if file exists
             if (!File.Exists(filePath))
+            {
+                return;
+            }
+
+            if (Path.GetExtension(filePath).ToLower() != ".json")
             {
                 return;
             }

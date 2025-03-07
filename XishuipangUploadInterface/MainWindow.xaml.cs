@@ -1,23 +1,12 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using ParseTextToJson;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using ParseTextToJson;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace XishuipangUploadInterface
 {
@@ -102,6 +91,8 @@ namespace XishuipangUploadInterface
             }
         }
 
+        public string VersionNumber { get; set; }
+
         public Logger InfoLogger { get; set; } = Logger.Instance;
 
         public MainWindow()
@@ -109,7 +100,11 @@ namespace XishuipangUploadInterface
             InitializeComponent();
             this.DataContext = this;
 
-            InfoLogger.WriteLine("Xishuipang Upload Utility v1.0, 2021-4-2");
+            string appName = Assembly.GetExecutingAssembly().GetName().Name.ToString();
+            string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            InfoLogger.WriteLine($"{appName} {version}");
+            VersionNumber = $"Version Number: {version}";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -176,7 +171,7 @@ namespace XishuipangUploadInterface
                 else
                 {
                     // TODO: Write better error messages.
-                    MessageBox.Show("Error: Can't converting .doc files.");
+                    MessageBox.Show("Error: Can't convert .doc files.");
                 }
             }
             else
